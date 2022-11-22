@@ -14,18 +14,7 @@ with open('data_dict_train.pickle', 'rb') as handle:
 data_dict 
 
 #Load dwts
-dwts = data_dict['dwts']
-
-#Normalize dwts
-dwts_norm = np.zeros(dwts.shape)
-for i in range(dwts.shape[0]):
-    maximum, minimum = np.amax(dwts[i,:]), np.amin(dwts[i,:])
-    if abs(maximum) >= abs(minimum):
-        dwts_norm[i,:] = dwts[i,:]/maximum
-    elif abs(maximum) < abs(minimum):
-        dwts_norm[i,:] = dwts[i,:]/(-1*minimum)
-print(dwts_norm.shape) 
-
+dwts_norm = data_dict['dwts_norm']
 
 
 #Precompute similarity matrix 

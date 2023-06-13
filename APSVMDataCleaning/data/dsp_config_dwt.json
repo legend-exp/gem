@@ -1,6 +1,6 @@
 {
   "outputs": [
-    "dwt_norm", "wf_norm"
+    "dwt_haar", "wf_blsub"
    ],
   
    "processors":{
@@ -20,41 +20,13 @@
       "unit": "ADC"
     },
        
-    "wf_tp_min, wf_tp_max, wf_min, wf_max":{
-      "function": "min_max",
-      "module": "pygama.dsp.processors",
-      "args": ["wf_blsub", "wf_tp_min", "wf_tp_max", "wf_min", "wf_max"],
-      "unit": ["ns","ns","ADC", "ADC"]
-    },
-       
-    "wf_norm": {
-        "function": "min_max_norm",
-        "module": "pygama.dsp.processors",
-        "args": ["wf_blsub", "wf_min", "wf_max", "wf_norm"],
-        "unit": ["ADC"]
-    },
-
     "dwt_haar":{
         "function": "discrete_wavelet_transform",
         "module": "pygama.dsp.processors",
         "args": ["wf_blsub", "dwt_haar(shape=256)"],
         "unit": "ADC",
         "prereqs": ["wf_blsub"],
-        "init_args": ["'haar'","5", "'a'"]
-    },
-    
-    "dwt_tp_min, dwt_tp_max, dwt_min, dwt_max":{
-      "function": "min_max",
-      "module": "pygama.dsp.processors",
-      "args": ["dwt_haar", "dwt_tp_min", "dwt_tp_max", "dwt_min", "dwt_max"],
-      "unit": ["ns","ns","ADC", "ADC"]
-    },
-
-    "dwt_norm": {
-        "function": "min_max_norm",
-        "module": "pygama.dsp.processors",
-        "args": ["dwt_haar", "dwt_min", "dwt_max", "dwt_norm"],
-        "unit": ["ADC"]
+        "init_args": ["'haar'","5"]
     }
   }
 }

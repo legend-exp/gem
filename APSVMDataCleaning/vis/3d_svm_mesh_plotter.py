@@ -1,4 +1,4 @@
-import pickle, time, json, argparse
+import pickle, time, json, argparse, tqdm
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
@@ -7,6 +7,7 @@ from matplotlib.colors import ListedColormap
 '''
 Plot 3D embedded waveforms and SVM decision regions.
 '''
+plt.style.use('../clint.mpl')
 
 argparser = argparse.ArgumentParser()
 argparser.add_argument("--file", help="file containing mesh data", type=str, required=True)
@@ -43,8 +44,8 @@ categories = ['Norm', 'NegGo', 'UpSlo', 'DownSlo', 'Spike',
               'XTalk', 'SlowRise', 'EarlyTr', 'LateTr', 'Saturation',
               'SoftPile', 'HardPile', 'Bump', 'NoiseTr']
 colors = ['blue', 'green', 'red', 'cyan', 'fuchsia', 
-          'gold', 'indigo', 'grey', 'maroon', 'orange',
-          'pink', 'yellow', 'sienna', 'purple']
+          'gold', 'indigo', 'grey', 'maroon', 'tab:orange',
+          'hotpink', 'magenta', 'sienna', 'purple']
 cmap = ListedColormap(colors)
 
 # Define voxel colors
@@ -75,7 +76,7 @@ alphas = [0.4, 0.4, 0.4, 0.4, 0.4,
 
 print("Starting voxel plot")
 start_time = time.time()
-for i in range(int(labels.max()+1)):        
+for i in tqdm.tqdm(range(int(labels.max()+1))):        
     ax.voxels(xx, yy, zz, cubes[i], 
           facecolors=voxcolors, 
           edgecolor=None, 
@@ -100,7 +101,7 @@ for i in list(set(labels)):
     legend_labels.append(categories[int(i)])
 
 fig.legend(handles, legend_labels, fontsize=60, 
-          loc='lower right', markerscale=2)
+          loc='center right', markerscale=2)
 
 plt.savefig("3d_svm.pdf", dpi=700, format='pdf')
 

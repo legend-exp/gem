@@ -113,14 +113,14 @@ n_exemps_opt = len(ap_opt.cluster_centers_indices_)
 
 # Save hyperparameters and model
 
-with open('../data/hyperparameters.json', 'rb') as infile:
+with open('../data/hyperparameters.json', 'r') as infile:
     hyperparams_dict = json.load(infile)
     
-hyperparams_dict['AP']['median'] = median
-hyperparams_dict['AP']['minimum'] = minimum
-hyperparams_dict['AP']['damping'] = opt_hyperpars[1]
-hyperparams_dict['AP']['preference'] = opt_hyperpars[0]
-hyperparams_dict['AP']['exemplars'] = n_exemps_opt
+hyperparams_dict['AP']['median'] = str(median)
+hyperparams_dict['AP']['minimum'] = str(minimum)
+hyperparams_dict['AP']['damping'] = str(opt_hyperpars[1])
+hyperparams_dict['AP']['preference'] = str(opt_hyperpars[0])
+hyperparams_dict['AP']['exemplars'] = str(n_exemps_opt)
 
 infile.close()
 

@@ -4,7 +4,7 @@ from sklearn.svm import SVC
 from sklearn.manifold import TSNE
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.model_selection import RandomizedSearchCV
-from sklearn.utils.fixes import loguniform
+from scipy.stats import loguniform
 
 '''
 Use this script to find the optimal hyperparameters for a SVM.
@@ -19,7 +19,7 @@ args = argparser.parse_args()
 with open(args.file, 'rb') as handle:
     data_dict = pickle.load(handle)
     
-with open('../data/hyperparameters.json', 'rb') as infile:
+with open('../data/hyperparameters.json', 'r') as infile:
     hyperparams_dict = json.load(infile)
 
 # Define training inputs
@@ -66,9 +66,9 @@ print(
     % (grid.best_params_, grid.best_score_)
 )
 
-hyperparams_dict['SVM']['C'] = grid.best_params_['C']
-hyperparams_dict['SVM']['gamma'] = grid.best_params_['gamma']
-hyperparams_dict['SVM']['score'] = grid.best_score_
+hyperparams_dict['SVM']['C'] = str(grid.best_params_['C'])
+hyperparams_dict['SVM']['gamma'] = str(grid.best_params_['gamma'])
+hyperparams_dict['SVM']['score'] = str(grid.best_score_)
 
 with open("../data/hyperparameters.json", "w") as outfile:
     json.dump(hyperparams_dict, outfile)

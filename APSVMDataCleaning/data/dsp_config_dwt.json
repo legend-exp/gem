@@ -40,7 +40,7 @@
         "args": ["wf_blsub", "dwt_haar(shape=256)"],
         "unit": "ADC",
         "prereqs": ["wf_blsub"],
-        "init_args": ["'haar'","5", "'a'"]
+        "init_args": ["'haar'","5"]
     },
     
     "dwt_tp_min, dwt_tp_max, dwt_min, dwt_max":{

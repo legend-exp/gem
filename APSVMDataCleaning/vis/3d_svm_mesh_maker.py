@@ -16,7 +16,7 @@ args = argparser.parse_args()
 with open(args.file, 'rb') as in_data:
     data_dict = pickle.load(in_data)
     
-with open('../data/hyperparameters.json', 'rb') as in_hyper:
+with open('../data/hyperparameters.json', 'r') as in_hyper:
     hyperparams_dict = json.load(in_hyper)
 
 # Define training inputs
@@ -32,8 +32,8 @@ svm = SVC(random_state=SVM_hyperparams['random_state'],
           kernel=SVM_hyperparams['kernel'], 
           decision_function_shape=SVM_hyperparams['decision_function_shape'],
           class_weight=SVM_hyperparams['class_weight'],
-          C=SVM_hyperparams['C'],
-          gamma=SVM_hyperparams['gamma'])
+          C=float(SVM_hyperparams['C']),
+          gamma=float(SVM_hyperparams['gamma']))
 
 svm.fit(dwts_norm_3d,labels)
 

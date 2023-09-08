@@ -4,7 +4,7 @@ from sklearn.svm import SVC
 from sklearn.manifold import TSNE
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.model_selection import RandomizedSearchCV
-from sklearn.utils.fixes import loguniform
+from scipy.stats import loguniform
 
 '''
 Find the optimal hyperparameters for a 3D SVM.
@@ -19,7 +19,7 @@ args = argparser.parse_args()
 with open(args.file, 'rb') as in_data:
     data_dict = pickle.load(in_data)
     
-with open('../data/hyperparameters.json', 'rb') as in_hyper:
+with open('../data/hyperparameters.json', 'r') as in_hyper:
     hyperparams_dict = json.load(in_hyper)
 
 # Define training inputs
@@ -32,10 +32,10 @@ TSNE_hyperparams = hyperparams_dict['TSNE_3D']
 # Initialize 3D TSNE with optimal hyperparameters
 
 tsne3d = TSNE(n_components= TSNE_hyperparams['n_components'], 
-                   perplexity = TSNE_hyperparams['perplexity'],
+                   perplexity = float(TSNE_hyperparams['perplexity']),
                    early_exaggeration= TSNE_hyperparams['early_exaggeration'],
                    random_state= TSNE_hyperparams['random_state'],
-                   learning_rate= TSNE_hyperparams['learning_rate'], 
+                   learning_rate= float(TSNE_hyperparams['learning_rate']), 
                    metric = TSNE_hyperparams['metric'],
                    init = TSNE_hyperparams['init'], 
                    n_jobs = -1) 
@@ -86,9 +86,9 @@ print(
     % (grid.best_params_, grid.best_score_)
 )
 
-hyperparams_dict['SVM_3D']['C'] = grid.best_params_['C']
-hyperparams_dict['SVM_3D']['gamma'] = grid.best_params_['gamma']
-hyperparams_dict['SVM_3D']['score'] = grid.best_score_
+hyperparams_dict['SVM_3D']['C'] = str(grid.best_params_['C'])
+hyperparams_dict['SVM_3D']['gamma'] = str(grid.best_params_['gamma'])
+hyperparams_dict['SVM_3D']['score'] = str(grid.best_score_)
 
 with open("../data/hyperparameters.json", "w") as out_hyper:
     json.dump(hyperparams_dict, out_hyper)

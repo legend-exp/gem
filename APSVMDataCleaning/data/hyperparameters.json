@@ -1,1 +1,41 @@
-{"AP": {"metric": "l1", "median": -2871.0702149574645, "minimum": -10774.33261138218, "damping": 0.9, "preference": -10774.33261138218, "random_state": 0, "max_iter": 500, "convergence_iter": 25, "affinity": "precomputed", "exemplars": 100}, "TSNE_2D": {"n_components": 2, "early_exaggeration": 18.0, "perplexity": 210, "random_state": 0, "learning_rate": 400, "metric": "chebyshev", "init": "pca"}, "TSNE_3D": {"n_components": 3, "early_exaggeration": 18.0, "perplexity": 90, "random_state": 0, "learning_rate": 200, "metric": "chebyshev", "init": "pca"}, "SVM": {"random_state": 0, "kernel": "rbf", "decision_function_shape": "ovr", "class_weight": "balanced", "C": 7499.637660035243, "gamma": 0.0027047050345691656, "score": 0.9973118279569894}, "SVM_3D": {"random_state": 0, "kernel": "rbf", "decision_function_shape": "ovr", "class_weight": "balanced", "C": 190.505467564935, "gamma": 0.006758426529248689, "score": 0.9990322580645161}}
+{
+    "AP": {
+        "metric": "l1",
+        "median": "-404.5452",
+        "minimum": "-1360.41",
+        "damping": "0.8",
+        "preference": "-380.0911187065972",
+        "random_state": 0,
+        "max_iter": 500,
+        "convergence_iter": 25,
+        "affinity": "precomputed",
+        "exemplars": "40"
+    },
+    "TSNE_3D": {
+        "n_components": 3,
+        "early_exaggeration": 18.0,
+        "perplexity": "210",
+        "random_state": 0,
+        "learning_rate": "800",
+        "metric": "chebyshev",
+        "init": "pca"
+    },
+    "SVM": {
+        "random_state": 0,
+        "kernel": "rbf",
+        "decision_function_shape": "ovr",
+        "class_weight": "balanced",
+        "C": "7.299939580009237",
+        "gamma": "0.07829975523629845",
+        "score": "0.9478686918177364"
+    },
+    "SVM_3D": {
+        "random_state": 0,
+        "kernel": "rbf",
+        "decision_function_shape": "ovr",
+        "class_weight": "balanced",
+        "C": "1307927.0632302458",
+        "gamma": "3.662565238834914e-05",
+        "score": "0.997492477432297"
+    }
+}

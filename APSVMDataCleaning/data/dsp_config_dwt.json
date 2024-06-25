@@ -1,58 +1,81 @@
 {
   "outputs": [
-    "dwt_norm", "wf_norm"
+    "dwt_norm", "wf_norm", "daqenergy", "wf_presum"
    ],
   
    "processors":{
+       
+    "wf_presum": {
+      "description": "divide waveform by presum factor",
+      "function": "divide",
+      "module": "numpy",
+      "args": [
+        "waveform_presummed",
+        "presum_rate",
+        "wf_presum(1024, 'float32')"
+      ],
+      "unit": ["ADC"]
+    },
 
-    "bl_mean , bl_std, bl_slope, bl_intercept":{
-       "function": "linear_slope_fit",
-       "module": "pygama.dsp.processors",
-       "args" : ["waveform[0: round(44.5*us/waveform.period)]", 
-                 "bl_mean","bl_std", "bl_slope","bl_intercept"],
-       "unit": ["ADC","ADC","ADC","ADC"]
+    "bl_mean , bl_std, bl_slope, bl_intercept": {
+      "description": "finds mean and rms of presummed waveform baseline (first 44.5us) as well as linear fit to this",
+      "function": "linear_slope_fit",
+      "module": "dspeed.processors",
+      "args": [
+        "wf_presum[0: round(44.5*us, wf_presum.period)]",
+        "bl_mean",
+        "bl_std",
+        "bl_slope",
+        "bl_intercept"
+      ],
+      "unit": ["ADC", "ADC", "ADC", "ADC"]
     },
        
-    "wf_blsub":{
+    "wf_blsub": {
+      "description": "baseline subtraction using mean of presummed baseline",
       "function": "bl_subtract",
-      "module": "pygama.dsp.processors",
-      "args": ["waveform", "bl_mean", "wf_blsub"],
+      "module": "dspeed.processors",
+      "args": ["wf_presum", "bl_mean", "wf_blsub"],
       "unit": "ADC"
     },
        
-    "wf_tp_min, wf_tp_max, wf_min, wf_max":{
+    "tp_min, tp_max, wf_min, wf_max": {
+      "description": "find max and min of baseline-subtracted waveform with corresponding time points",
       "function": "min_max",
-      "module": "pygama.dsp.processors",
-      "args": ["wf_blsub", "wf_tp_min", "wf_tp_max", "wf_min", "wf_max"],
-      "unit": ["ns","ns","ADC", "ADC"]
+      "module": "dspeed.processors",
+      "args": ["wf_blsub", "tp_min", "tp_max", "wf_min", "wf_max"],
+      "unit": ["ns", "ns", "ADC", "ADC"]
     },
        
     "wf_norm": {
+        "description": "normalizes the baseline-subtracted waveform by its min/max, whichever is greater in absolute value",
         "function": "min_max_norm",
-        "module": "pygama.dsp.processors",
+        "module": "dspeed.processors",
         "args": ["wf_blsub", "wf_min", "wf_max", "wf_norm"],
         "unit": ["ADC"]
     },
-
-    "dwt_haar":{
-        "function": "discrete_wavelet_transform",
-        "module": "pygama.dsp.processors",
-        "args": ["wf_blsub", "dwt_haar(shape=256)"],
-        "unit": "ADC",
-        "prereqs": ["wf_blsub"],
-        "init_args": ["'haar'","5"]
-    },
-    
+       
     "dwt_tp_min, dwt_tp_max, dwt_min, dwt_max":{
+      "description": "find max and min of the DWT with corresponding time points",
       "function": "min_max",
-      "module": "pygama.dsp.processors",
+      "module": "dspeed.processors",
       "args": ["dwt_haar", "dwt_tp_min", "dwt_tp_max", "dwt_min", "dwt_max"],
       "unit": ["ns","ns","ADC", "ADC"]
     },
-
+       
+    "dwt_haar":{
+        "description": "performs a DWT with Haar wavelets and 2 levels on the baseline-subtracted waveform",
+        "function": "discrete_wavelet_transform",
+        "module": "dspeed.processors",
+        "args": ["wf_blsub", 2, "'h'", "'a'", "dwt_haar(256, 'f')"],
+        "unit": "ADC",
+        "prereqs": ["wf_blsub"]
+    },
+    
     "dwt_norm": {
+        "description": "normalizes DWT by its min/max, whichever is greater in absolute value",
         "function": "min_max_norm",
-        "module": "pygama.dsp.processors",
+        "module": "dspeed.processors",
         "args": ["dwt_haar", "dwt_min", "dwt_max", "dwt_norm"],
         "unit": ["ADC"]
     }

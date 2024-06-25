@@ -1,7 +1,7 @@
 import time, pickle, json, argparse
 import numpy as np
+import lgdo
 from sklearn.svm import SVC
-from sklearn.manifold import TSNE
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.model_selection import RandomizedSearchCV
 from scipy.stats import loguniform
@@ -16,16 +16,16 @@ args = argparser.parse_args()
 
 # Load files
 
-with open(args.file, 'rb') as handle:
-    data_dict = pickle.load(handle)
+sto = lgdo.lh5.LH5Store()
+tb_dsp, _ = sto.read('ml_train/dsp', args.file)
     
 with open('../data/hyperparameters.json', 'r') as infile:
     hyperparams_dict = json.load(infile)
 
 # Define training inputs
 
-dwts_norm = data_dict['dwt_norm']
-labels = data_dict['dc_label']
+dwts_norm = tb_dsp['dwt_norm'].nda
+labels = tb_dsp['dc_label'].nda
 SVM_hyperparams = hyperparams_dict['SVM']
 
 
@@ -47,7 +47,8 @@ clf = SVC(random_state=SVM_hyperparams['random_state'],
 grid = RandomizedSearchCV(estimator=clf,
                           param_distributions=param_dist, 
                           cv=cv,
-                          n_iter=10,
+                          n_iter=100,
+                          verbose=2,
                           n_jobs=-1 
                          )
 # Close input file 
@@ -71,7 +72,7 @@ hyperparams_dict['SVM']['gamma'] = str(grid.best_params_['gamma'])
 hyperparams_dict['SVM']['score'] = str(grid.best_score_)
 
 with open("../data/hyperparameters.json", "w") as outfile:
-    json.dump(hyperparams_dict, outfile)
+    json.dump(hyperparams_dict, outfile, indent=3)
     
 # Close output file 
 
